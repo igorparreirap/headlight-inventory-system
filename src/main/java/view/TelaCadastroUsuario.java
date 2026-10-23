@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.UsuarioDAO;
 import model.Usuario;
 import util.GerenciadorIdioma;
+import util.MensagemErro;
 import util.Validador;
 
 /**
@@ -254,7 +255,7 @@ public class TelaCadastroUsuario extends JDialog {
     }
 
     private void erroOperacao(Exception ex) {
-        mostrar(GerenciadorIdioma.get("erro.operacao") + "\n" + ex.getMessage(),
+        mostrar(MensagemErro.traduzir(ex),
                 JOptionPane.ERROR_MESSAGE);
     }
 }

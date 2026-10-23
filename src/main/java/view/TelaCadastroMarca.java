@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.MarcaDAO;
 import model.Marca;
 import util.GerenciadorIdioma;
+import util.MensagemErro;
 import util.Validador;
 
 /**
@@ -241,7 +242,7 @@ public class TelaCadastroMarca extends JDialog {
     }
 
     private void erroOperacao(Exception ex) {
-        mostrar(GerenciadorIdioma.get("erro.operacao") + "\n" + ex.getMessage(),
+        mostrar(MensagemErro.traduzir(ex),
                 JOptionPane.ERROR_MESSAGE);
     }
 }

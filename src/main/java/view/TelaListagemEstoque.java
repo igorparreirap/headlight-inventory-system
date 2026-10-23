@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.FarolDAO;
 import model.Farol;
 import util.GerenciadorIdioma;
+import util.MensagemErro;
 
 /**
  * Janela de listagem do estoque (JDialog).
@@ -90,7 +91,7 @@ public class TelaListagemEstoque extends JDialog {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    GerenciadorIdioma.get("erro.operacao") + "\n" + ex.getMessage(),
+                    MensagemErro.traduzir(ex),
                     getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }

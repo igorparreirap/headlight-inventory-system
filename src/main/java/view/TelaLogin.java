@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import dao.UsuarioDAO;
 import model.Usuario;
 import util.GerenciadorIdioma;
+import util.MensagemErro;
 
 /**
  * Tela de login do sistema (JFrame).
@@ -92,7 +93,7 @@ public class TelaLogin extends JFrame {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    GerenciadorIdioma.get("erro.operacao") + "\n" + ex.getMessage(),
+                    MensagemErro.traduzir(ex),
                     GerenciadorIdioma.get("titulo.login"),
                     JOptionPane.ERROR_MESSAGE);
         }
