@@ -1,0 +1,31 @@
+# Build output
+bin/
+target/
+out/
+*.class
+
+# Dependencies (managed by the build tool, never committed)
+lib/
+*.jar
+
+# Local configuration / secrets
+db.properties
+
+# IDE - Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# IDE - IntelliJ / VS Code
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
