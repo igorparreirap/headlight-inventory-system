@@ -27,16 +27,11 @@ public class UsuarioDAO {
      */
     public void inserir(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO usuario (login, senha) VALUES (?, ?)";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, usuario.getLogin());
             st.setString(2, HashSenha.gerar(usuario.getSenha()));
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -48,17 +43,12 @@ public class UsuarioDAO {
      */
     public void alterar(Usuario usuario) throws SQLException {
         String sql = "UPDATE usuario SET login = ?, senha = ? WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, usuario.getLogin());
             st.setString(2, HashSenha.gerar(usuario.getSenha()));
             st.setInt(3, usuario.getId());
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -70,15 +60,10 @@ public class UsuarioDAO {
      */
     public void excluir(int id) throws SQLException {
         String sql = "DELETE FROM usuario WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setInt(1, id);
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -91,19 +76,14 @@ public class UsuarioDAO {
     public List<Usuario> listar() throws SQLException {
         String sql = "SELECT id, login, senha FROM usuario ORDER BY login";
         List<Usuario> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(new Usuario(rs.getInt("id"),
-                        rs.getString("login"), rs.getString("senha")));
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Usuario(rs.getInt("id"),
+                            rs.getString("login"), rs.getString("senha")));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -119,20 +99,15 @@ public class UsuarioDAO {
         String sql = "SELECT id, login, senha FROM usuario "
                 + "WHERE login LIKE ? ORDER BY login";
         List<Usuario> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, "%" + (filtro == null ? "" : filtro) + "%");
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(new Usuario(rs.getInt("id"),
-                        rs.getString("login"), rs.getString("senha")));
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Usuario(rs.getInt("id"),
+                            rs.getString("login"), rs.getString("senha")));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -147,20 +122,15 @@ public class UsuarioDAO {
      */
     public Usuario autenticar(String login, String senha) throws SQLException {
         String sql = "SELECT id, login, senha FROM usuario WHERE login = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, login);
-            rs = st.executeQuery();
-            if (rs.next() && HashSenha.verificar(senha, rs.getString("senha"))) {
-                return new Usuario(rs.getInt("id"), rs.getString("login"), null);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next() && HashSenha.verificar(senha, rs.getString("senha"))) {
+                    return new Usuario(rs.getInt("id"), rs.getString("login"), null);
+                }
+                return null;
             }
-            return null;
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
     }
 
@@ -173,17 +143,12 @@ public class UsuarioDAO {
      */
     public boolean existePorLogin(String login) throws SQLException {
         String sql = "SELECT 1 FROM usuario WHERE login = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, login);
-            rs = st.executeQuery();
-            return rs.next();
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -196,17 +161,12 @@ public class UsuarioDAO {
      */
     public Integer obterIdPorLogin(String login) throws SQLException {
         String sql = "SELECT id FROM usuario WHERE login = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, login);
-            rs = st.executeQuery();
-            return rs.next() ? rs.getInt("id") : null;
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next() ? rs.getInt("id") : null;
+            }
         }
     }
 

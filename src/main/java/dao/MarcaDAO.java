@@ -25,15 +25,10 @@ public class MarcaDAO {
      */
     public void inserir(Marca marca) throws SQLException {
         String sql = "INSERT INTO marca (nome) VALUES (?)";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, marca.getNome());
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -45,16 +40,11 @@ public class MarcaDAO {
      */
     public void alterar(Marca marca) throws SQLException {
         String sql = "UPDATE marca SET nome = ? WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, marca.getNome());
             st.setInt(2, marca.getId());
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -66,15 +56,10 @@ public class MarcaDAO {
      */
     public void excluir(int id) throws SQLException {
         String sql = "DELETE FROM marca WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setInt(1, id);
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -98,18 +83,13 @@ public class MarcaDAO {
     public List<Marca> listarOrdenadoPorNome() throws SQLException {
         String sql = "SELECT id, nome FROM marca ORDER BY nome";
         List<Marca> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(new Marca(rs.getInt("id"), rs.getString("nome")));
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Marca(rs.getInt("id"), rs.getString("nome")));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -124,19 +104,14 @@ public class MarcaDAO {
     public List<Marca> pesquisarPorNome(String filtro) throws SQLException {
         String sql = "SELECT id, nome FROM marca WHERE nome LIKE ? ORDER BY nome";
         List<Marca> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, "%" + (filtro == null ? "" : filtro) + "%");
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(new Marca(rs.getInt("id"), rs.getString("nome")));
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Marca(rs.getInt("id"), rs.getString("nome")));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -150,17 +125,12 @@ public class MarcaDAO {
      */
     public boolean existePorNome(String nome) throws SQLException {
         String sql = "SELECT 1 FROM marca WHERE nome = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, nome);
-            rs = st.executeQuery();
-            return rs.next();
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -173,17 +143,12 @@ public class MarcaDAO {
      */
     public Integer obterIdPorNome(String nome) throws SQLException {
         String sql = "SELECT id FROM marca WHERE nome = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, nome);
-            rs = st.executeQuery();
-            return rs.next() ? rs.getInt("id") : null;
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next() ? rs.getInt("id") : null;
+            }
         }
     }
 

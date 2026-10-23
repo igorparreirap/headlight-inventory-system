@@ -7,15 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 /**
  * Utilitario de acesso ao banco de dados MySQL via JDBC.
- * Centraliza a obtencao da conexao (getConnection) e a liberacao de
- * recursos (fechar), evitando duplicacao de codigo nas classes DAO.
+ * Centraliza a obtencao da conexao; as classes DAO liberam os recursos
+ * com try-with-resources.
  *
  * <p>As credenciais NAO ficam no codigo-fonte. Elas sao lidas, nesta ordem
  * de prioridade:</p>
@@ -96,41 +94,5 @@ public final class ConexaoBD {
                 obter("DB_URL", "db.url", URL_PADRAO),
                 obter("DB_USER", "db.user", USER_PADRAO),
                 obter("DB_PASSWORD", "db.password", PASS_PADRAO));
-    }
-
-    /**
-     * Libera, com seguranca, os recursos JDBC informados (ignora nulos).
-     *
-     * @param con conexao a fechar
-     * @param st  statement a fechar
-     * @param rs  resultset a fechar
-     */
-    public static void fechar(Connection con, Statement st, ResultSet rs) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (st != null) {
-                st.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /** Sobrecarga para fechar apenas conexao e statement. */
-    public static void fechar(Connection con, Statement st) {
-        fechar(con, st, null);
     }
 }

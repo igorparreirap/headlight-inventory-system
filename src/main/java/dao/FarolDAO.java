@@ -49,11 +49,8 @@ public class FarolDAO {
         String sql = "INSERT INTO farol "
                 + "(modelo, ano, tipo, quantidade, preco, id_marca) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, farol.getModelo());
             st.setInt(2, farol.getAno());
             st.setString(3, farol.getTipo());
@@ -61,8 +58,6 @@ public class FarolDAO {
             st.setDouble(5, farol.getPreco());
             st.setInt(6, farol.getMarca().getId());
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -75,11 +70,8 @@ public class FarolDAO {
     public void alterar(Farol farol) throws SQLException {
         String sql = "UPDATE farol SET modelo = ?, ano = ?, tipo = ?, "
                 + "quantidade = ?, preco = ?, id_marca = ? WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, farol.getModelo());
             st.setInt(2, farol.getAno());
             st.setString(3, farol.getTipo());
@@ -88,8 +80,6 @@ public class FarolDAO {
             st.setInt(6, farol.getMarca().getId());
             st.setInt(7, farol.getId());
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -101,15 +91,10 @@ public class FarolDAO {
      */
     public void excluir(int id) throws SQLException {
         String sql = "DELETE FROM farol WHERE id = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setInt(1, id);
             st.executeUpdate();
-        } finally {
-            ConexaoBD.fechar(con, st);
         }
     }
 
@@ -139,18 +124,13 @@ public class FarolDAO {
         }
         String sql = SELECT_BASE + orderBy;
         List<Farol> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(montar(rs));
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -181,23 +161,18 @@ public class FarolDAO {
         }
 
         List<Farol> lista = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             if (usaAno) {
                 st.setInt(1, Integer.parseInt(valor.trim()));
             } else {
                 st.setString(1, "%" + (valor == null ? "" : valor.trim()) + "%");
             }
-            rs = st.executeQuery();
-            while (rs.next()) {
-                lista.add(montar(rs));
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
             }
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
         }
         return lista;
     }
@@ -216,20 +191,15 @@ public class FarolDAO {
             throws SQLException {
         String sql = "SELECT 1 FROM farol "
                 + "WHERE modelo = ? AND ano = ? AND tipo = ? AND id_marca = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, modelo);
             st.setInt(2, ano);
             st.setString(3, tipo);
             st.setInt(4, idMarca);
-            rs = st.executeQuery();
-            return rs.next();
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -247,20 +217,15 @@ public class FarolDAO {
             throws SQLException {
         String sql = "SELECT id FROM farol "
                 + "WHERE modelo = ? AND ano = ? AND tipo = ? AND id_marca = ?";
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            con = ConexaoBD.getConnection();
-            st = con.prepareStatement(sql);
+        try (Connection con = ConexaoBD.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, modelo);
             st.setInt(2, ano);
             st.setString(3, tipo);
             st.setInt(4, idMarca);
-            rs = st.executeQuery();
-            return rs.next() ? rs.getInt("id") : null;
-        } finally {
-            ConexaoBD.fechar(con, st, rs);
+            try (ResultSet rs = st.executeQuery()) {
+                return rs.next() ? rs.getInt("id") : null;
+            }
         }
     }
 
