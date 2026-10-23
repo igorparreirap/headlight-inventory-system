@@ -145,8 +145,13 @@ public class FarolDAO {
      * @throws SQLException em caso de erro de banco
      */
     public List<Farol> pesquisar(String filtro, String valor) throws SQLException {
-        String sql;
+        String texto = valor == null ? "" : valor.trim();
         boolean usaAno = "ano".equalsIgnoreCase(filtro);
+        if (usaAno && texto.isEmpty()) {
+            // filtro por ano sem valor informado: retorna todos
+            return listar();
+        }
+        String sql;
         if ("modelo".equalsIgnoreCase(filtro)) {
             sql = SELECT_BASE + "WHERE f.modelo LIKE ? ORDER BY f.modelo";
         } else if ("tipo".equalsIgnoreCase(filtro)) {
@@ -164,9 +169,9 @@ public class FarolDAO {
         try (Connection con = ConexaoBD.getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
             if (usaAno) {
-                st.setInt(1, Integer.parseInt(valor.trim()));
+                st.setInt(1, Integer.parseInt(texto));
             } else {
-                st.setString(1, "%" + (valor == null ? "" : valor.trim()) + "%");
+                st.setString(1, "%" + texto + "%");
             }
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
