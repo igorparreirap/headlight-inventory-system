@@ -150,7 +150,7 @@ public class TelaCadastroUsuario extends JDialog {
         }
     }
 
-        /** Altera o registro selecionado (ou localizado pelo login). */
+    /** Altera o registro selecionado (ou localizado pelo login). */
     private void alterar() {
         if (!validarCampos()) {
             return;
@@ -183,7 +183,7 @@ public class TelaCadastroUsuario extends JDialog {
         return usuarioDAO.obterIdPorLogin(txtLogin.getText().trim());
     }
 
-        /** Exclui o registro selecionado (ou localizado pelo login). */
+    /** Exclui o registro selecionado (ou localizado pelo login). */
     private void excluir() {
         try {
             Integer id = obterIdSelecionado();

@@ -149,7 +149,7 @@ public class TelaCadastroMarca extends JDialog {
         }
     }
 
-        /** Altera o registro selecionado (ou localizado pelos dados). */
+    /** Altera o registro selecionado (ou localizado pelos dados). */
     private void alterar() {
         String erro = Validador.isObrigatorio(txtNome.getText(),
                 GerenciadorIdioma.get("label.nome"));
@@ -184,7 +184,7 @@ public class TelaCadastroMarca extends JDialog {
         return marcaDAO.obterIdPorNome(txtNome.getText().trim());
     }
 
-        /** Exclui o registro selecionado (ou localizado pelos dados). */
+    /** Exclui o registro selecionado (ou localizado pelos dados). */
     private void excluir() {
         try {
             Integer id = obterIdSelecionado();

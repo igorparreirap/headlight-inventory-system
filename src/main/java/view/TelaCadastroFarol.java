@@ -246,7 +246,7 @@ public class TelaCadastroFarol extends JDialog {
         }
     }
 
-        /** Altera o registro selecionado (ou localizado pela chave de unicidade). */
+    /** Altera o registro selecionado (ou localizado pela chave de unicidade). */
     private void alterar() {
         if (!validarCampos()) {
             return;
@@ -287,7 +287,7 @@ public class TelaCadastroFarol extends JDialog {
                 txtTipo.getText().trim(), marca.getId());
     }
 
-        /** Exclui o registro selecionado (ou localizado pela chave de unicidade). */
+    /** Exclui o registro selecionado (ou localizado pela chave de unicidade). */
     private void excluir() {
         try {
             Integer id = obterIdSelecionado();
