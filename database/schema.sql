@@ -24,7 +24,7 @@ USE db_farois;
 CREATE TABLE usuario (
     id    INT          NOT NULL AUTO_INCREMENT,
     login VARCHAR(50)  NOT NULL,
-    senha VARCHAR(50)  NOT NULL,
+    senha VARCHAR(255) NOT NULL, -- hash PBKDF2 (nunca texto puro)
     CONSTRAINT pk_usuario PRIMARY KEY (id),
     CONSTRAINT uq_usuario_login UNIQUE (login)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -60,9 +60,10 @@ CREATE TABLE farol (
 -- DADOS DE TESTE (POPULADOS COM MAIS DE 100 VEÍCULOS)
 -- =============================================================================
 
--- Usuario administrador para acesso inicial
+-- Usuario administrador para acesso inicial (login: admin / senha: admin)
+-- A senha e armazenada como hash PBKDF2-HMAC-SHA256 (ver util.HashSenha).
 INSERT INTO usuario (login, senha) VALUES
-    ('admin', 'admin');
+    ('admin', 'pbkdf2$210000$PWkqgOosEEHEFCI0NWZj6A==$y2GQ0faOGqWXMKfFww2dbjXmamtG/OEeSUiSzA5/9Pk=');
 
 -- Cadastro de Marcas Ampliado
 INSERT INTO marca (nome) VALUES

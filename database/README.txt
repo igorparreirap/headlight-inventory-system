@@ -32,7 +32,7 @@
       mysql -u root -p < database/schema.sql
 
 4) ESTRUTURA DAS TABELAS
-   usuario(id*, login, senha)
+   usuario(id*, login, senha)  -- senha armazenada como hash PBKDF2
    marca(id*, nome)
    farol(id*, modelo, ano, tipo, quantidade, preco, id_marca -> marca.id)
 

@@ -9,11 +9,13 @@ import java.util.List;
 
 import model.Usuario;
 import util.ConexaoBD;
+import util.HashSenha;
 
 /**
  * Acesso a dados (DAO) da entidade Usuario via JDBC.
  * Responsavel pelo CRUD, pela autenticacao e pela verificacao de
  * unicidade do login, sempre com PreparedStatement.
+ * As senhas sao persistidas apenas como hash (ver {@link HashSenha}).
  */
 public class UsuarioDAO {
 
@@ -31,7 +33,7 @@ public class UsuarioDAO {
             con = ConexaoBD.getConnection();
             st = con.prepareStatement(sql);
             st.setString(1, usuario.getLogin());
-            st.setString(2, usuario.getSenha());
+            st.setString(2, HashSenha.gerar(usuario.getSenha()));
             st.executeUpdate();
         } finally {
             ConexaoBD.fechar(con, st);
@@ -52,7 +54,7 @@ public class UsuarioDAO {
             con = ConexaoBD.getConnection();
             st = con.prepareStatement(sql);
             st.setString(1, usuario.getLogin());
-            st.setString(2, usuario.getSenha());
+            st.setString(2, HashSenha.gerar(usuario.getSenha()));
             st.setInt(3, usuario.getId());
             st.executeUpdate();
         } finally {
@@ -144,8 +146,7 @@ public class UsuarioDAO {
      * @throws SQLException em caso de erro de banco
      */
     public Usuario autenticar(String login, String senha) throws SQLException {
-        String sql = "SELECT id, login, senha FROM usuario "
-                + "WHERE login = ? AND senha = ?";
+        String sql = "SELECT id, login, senha FROM usuario WHERE login = ?";
         Connection con = null;
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -153,11 +154,9 @@ public class UsuarioDAO {
             con = ConexaoBD.getConnection();
             st = con.prepareStatement(sql);
             st.setString(1, login);
-            st.setString(2, senha);
             rs = st.executeQuery();
-            if (rs.next()) {
-                return new Usuario(rs.getInt("id"),
-                        rs.getString("login"), rs.getString("senha"));
+            if (rs.next() && HashSenha.verificar(senha, rs.getString("senha"))) {
+                return new Usuario(rs.getInt("id"), rs.getString("login"), null);
             }
             return null;
         } finally {
