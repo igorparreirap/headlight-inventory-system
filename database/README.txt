@@ -14,20 +14,20 @@
    - URL JDBC      : jdbc:mysql://localhost:3306/db_farois
 
    Caso o seu MySQL use outro usuario/senha, ajuste tambem as constantes
-   URL, USER e PASS da classe util.ConexaoBD no codigo-fonte (pasta OPROJETO).
+   URL, USER e PASS da classe util.ConexaoBD no codigo-fonte.
 
 2) ARQUIVO DO SCRIPT
-   - db_farois.sql : cria o banco, as tabelas e insere os dados de teste.
+   - schema.sql : cria o banco, as tabelas e insere os dados de teste.
 
 3) COMO EXECUTAR (HeidiSQL ou ferramenta semelhante)
    a) Abra o HeidiSQL e conecte-se ao servidor MySQL.
-   b) Menu Arquivo > Carregar arquivo SQL... e selecione db_farois.sql.
+   b) Menu Arquivo > Carregar arquivo SQL... e selecione schema.sql.
    c) Execute o script (F9 ou botao Executar).
    d) O proprio script faz DROP/CREATE do banco db_farois, portanto pode ser
       executado em uma base limpa quantas vezes for necessario.
 
    Alternativa por linha de comando:
-      mysql -u root -p < db_farois.sql
+      mysql -u root -p < database/schema.sql
 
 4) ESTRUTURA DAS TABELAS
    usuario(id*, login, senha)

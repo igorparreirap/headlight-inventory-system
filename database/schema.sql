@@ -1,7 +1,7 @@
 -- =============================================================================
 -- PROJETO   : Gerenciador de Estoque para Loja de Farois Automotivos (CMP1611)
 -- ALUNO     : Igor Parreira de Paula
--- ARQUIVO   : db_farois.sql  -  Script de criacao do banco e dados de teste
+-- ARQUIVO   : schema.sql     -  Script de criacao do banco e dados de teste
 -- SGBD      : MySQL (padrao MySQL, charset utf8mb4)
 -- -----------------------------------------------------------------------------
 -- DADOS DE ACESSO AO BANCO (usados pela classe util.ConexaoBD):
