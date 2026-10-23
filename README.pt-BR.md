@@ -159,7 +159,7 @@ mvn test
 - [ ] Versionar as migrações do banco com Flyway
 - [ ] Testes de integração dos DAOs com Testcontainers
 - [ ] Usar `BigDecimal` para preços
-- [ ] Look and feel moderno (FlatLaf)
+- [ ] Look and feel moderno (FlatLaf) com modo escuro
 
 ## Contexto
 

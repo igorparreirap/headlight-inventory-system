@@ -159,7 +159,7 @@ mvn test
 - [ ] Version database migrations with Flyway
 - [ ] Add integration tests for the DAOs with Testcontainers
 - [ ] Use `BigDecimal` for prices
-- [ ] Switch to a modern look and feel (FlatLaf)
+- [ ] Switch to a modern look and feel (FlatLaf) with dark mode
 
 ## Background
 
