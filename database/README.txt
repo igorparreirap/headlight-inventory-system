@@ -13,8 +13,10 @@
    - Host / Porta  : localhost / 3306
    - URL JDBC      : jdbc:mysql://localhost:3306/db_farois
 
-   Caso o seu MySQL use outro usuario/senha, ajuste tambem as constantes
-   URL, USER e PASS da classe util.ConexaoBD no codigo-fonte.
+   As credenciais NAO ficam no codigo-fonte. Copie o arquivo
+   db.properties.example (raiz do projeto) para db.properties e preencha
+   usuario e senha, ou defina as variaveis de ambiente DB_URL, DB_USER e
+   DB_PASSWORD.
 
 2) ARQUIVO DO SCRIPT
    - schema.sql : cria o banco, as tabelas e insere os dados de teste.

@@ -1,26 +1,82 @@
 package util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * Utilitario de acesso ao banco de dados MySQL via JDBC.
  * Centraliza a obtencao da conexao (getConnection) e a liberacao de
  * recursos (fechar), evitando duplicacao de codigo nas classes DAO.
+ *
+ * <p>As credenciais NAO ficam no codigo-fonte. Elas sao lidas, nesta ordem
+ * de prioridade:</p>
+ * <ol>
+ *   <li>Variaveis de ambiente {@code DB_URL}, {@code DB_USER} e {@code DB_PASSWORD};</li>
+ *   <li>Arquivo {@code db.properties} no diretorio de execucao
+ *       (copie de {@code db.properties.example});</li>
+ *   <li>Valores padrao (localhost, usuario root, senha vazia).</li>
+ * </ol>
  */
-public class ConexaoBD {
+public final class ConexaoBD {
 
-    /** Dados de conexao do banco db_farois. Ajuste conforme o ambiente. */
-    private static final String URL =
+    private static final String ARQUIVO_CONFIG = "db.properties";
+
+    private static final String URL_PADRAO =
             "jdbc:mysql://localhost:3306/db_farois?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASS = "";
+    private static final String USER_PADRAO = "root";
+    private static final String PASS_PADRAO = "";
+
+    private static final Properties CONFIG = carregarConfiguracao();
 
     /** Construtor privado: classe puramente utilitaria. */
     private ConexaoBD() {
+    }
+
+    /**
+     * Carrega o arquivo db.properties do diretorio atual ou, se nao existir,
+     * do classpath. A ausencia do arquivo nao e erro: os valores padrao sao usados.
+     */
+    private static Properties carregarConfiguracao() {
+        Properties props = new Properties();
+        Path arquivo = Paths.get(ARQUIVO_CONFIG);
+        try {
+            if (Files.exists(arquivo)) {
+                try (InputStream in = Files.newInputStream(arquivo)) {
+                    props.load(in);
+                }
+            } else {
+                try (InputStream in = ConexaoBD.class.getClassLoader()
+                        .getResourceAsStream(ARQUIVO_CONFIG)) {
+                    if (in != null) {
+                        props.load(in);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Nao foi possivel ler " + ARQUIVO_CONFIG + ": " + e.getMessage());
+        }
+        return props;
+    }
+
+    /**
+     * Resolve um parametro de configuracao: variavel de ambiente,
+     * depois db.properties, depois o valor padrao.
+     */
+    private static String obter(String variavelAmbiente, String chave, String padrao) {
+        String valor = System.getenv(variavelAmbiente);
+        if (valor != null && !valor.isEmpty()) {
+            return valor;
+        }
+        return CONFIG.getProperty(chave, padrao);
     }
 
     /**
@@ -32,11 +88,14 @@ public class ConexaoBD {
     public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(URL, USER, PASS);
         } catch (ClassNotFoundException e) {
             throw new SQLException(
                     "Driver JDBC do MySQL nao encontrado no classpath.", e);
         }
+        return DriverManager.getConnection(
+                obter("DB_URL", "db.url", URL_PADRAO),
+                obter("DB_USER", "db.user", USER_PADRAO),
+                obter("DB_PASSWORD", "db.password", PASS_PADRAO));
     }
 
     /**

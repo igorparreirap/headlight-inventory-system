@@ -1,0 +1,8 @@
+# Copy this file to "db.properties" (same folder you run the app from)
+# and fill in your local MySQL credentials. db.properties is git-ignored.
+#
+# Alternatively, set the environment variables DB_URL, DB_USER and DB_PASSWORD.
+
+db.url=jdbc:mysql://localhost:3306/db_farois?useSSL=false&serverTimezone=UTC
+db.user=root
+db.password=
