@@ -75,8 +75,8 @@ public class TelaConfigIdioma extends JDialog {
     /** Aplica o idioma escolhido e recarrega o ResourceBundle. */
     private void aplicar() {
         Locale novo = rbIngles.isSelected()
-                ? new Locale("en", "US")
-                : new Locale("pt", "BR");
+                ? Locale.forLanguageTag("en-US")
+                : Locale.forLanguageTag("pt-BR");
         GerenciadorIdioma.setLocale(novo);
         // Reaplica o idioma na janela de menu que abriu esta configuracao,
         // para que o menu principal tambem mude de idioma imediatamente.

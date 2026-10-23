@@ -15,7 +15,7 @@ public class GerenciadorIdioma {
     /** Caminho base dos arquivos .properties (pacote util.i18n). */
     private static final String BASE = "util.i18n.mensagens";
 
-    private static Locale localeAtual = new Locale("pt", "BR");
+    private static Locale localeAtual = Locale.forLanguageTag("pt-BR");
     private static ResourceBundle bundle =
             ResourceBundle.getBundle(BASE, localeAtual);
 
@@ -26,7 +26,7 @@ public class GerenciadorIdioma {
     /**
      * Define o idioma atual e recarrega o ResourceBundle.
      *
-     * @param locale novo Locale (ex.: new Locale("en", "US"))
+     * @param locale novo Locale (ex.: Locale.forLanguageTag("en-US"))
      */
     public static void setLocale(Locale locale) {
         localeAtual = locale;
